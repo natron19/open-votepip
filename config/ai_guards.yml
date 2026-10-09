@@ -1,0 +1,18 @@
+# Per-app guardrail configuration, read by AiGuardConfig.
+# See docs/ai-guardrails.md (Layer 5: AiOutputGuard) and docs/ai-evals.md.
+
+# A governance draft (a proposal for a community vote) is not where personal distress shows up; not crisis-aware.
+crisis_terms: []
+
+# Output structure rules per AiTemplate name. Templates not listed get the
+# generic output checks only (non-empty, no prompt leak, no profanity, no new PII).
+#   format:        text | json
+#   required_keys: top-level keys the JSON object must contain
+templates:
+  health_ping:
+    format: text
+  # ClarityChecksController#parse_clarity! reads these six keys. split_into is optional here (empty or absent for
+  # a single proposal); the parser checks it, the edit and question counts, and the person-name rule.
+  votepip_motion_v1:
+    format: json
+    required_keys: [single_proposal, votable, verdict_line, rewritten_motion, reader_questions, suggested_edits]

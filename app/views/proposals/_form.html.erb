@@ -1,0 +1,68 @@
+<div style="max-width: 720px;">
+  <%= form_with model: proposal,
+        data: { controller: "form-submit", action: "submit->form-submit#disable" } do |f| %>
+
+    <% if proposal.errors.any? %>
+      <div class="alert alert-danger">
+        <ul class="mb-0">
+          <% proposal.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="mb-3">
+      <%= f.label :title, "Title", class: "form-label" %>
+      <%= f.text_field :title, maxlength: 120,
+            class: "form-control #{'is-invalid' if proposal.errors[:title].any?}",
+            placeholder: "A short name people will recognise" %>
+      <% if proposal.errors[:title].any? %>
+        <div class="invalid-feedback"><%= proposal.errors[:title].first %></div>
+      <% end %>
+    </div>
+
+    <div class="mb-3">
+      <%= f.label :body, "The proposal", class: "form-label" %>
+      <%= f.text_area :body, rows: 6, maxlength: 3000,
+            class: "form-control #{'is-invalid' if proposal.errors[:body].any?}",
+            placeholder: "What you want the community to agree to, in your own words. Rough is fine." %>
+      <div class="form-text">Rough is fine; that is what the check is for. Leave out who you are.</div>
+      <% if proposal.errors[:body].any? %>
+        <div class="invalid-feedback"><%= proposal.errors[:body].first %></div>
+      <% end %>
+    </div>
+
+    <div class="mb-3">
+      <%= f.label :problem, "What problem does it solve?", class: "form-label" %>
+      <%= f.text_area :problem, rows: 3, maxlength: 1000,
+            class: "form-control #{'is-invalid' if proposal.errors[:problem].any?}",
+            placeholder: "What is not working today" %>
+      <% if proposal.errors[:problem].any? %>
+        <div class="invalid-feedback"><%= proposal.errors[:problem].first %></div>
+      <% end %>
+    </div>
+
+    <div class="mb-3">
+      <%= f.label :decider, "Who decides", class: "form-label" %>
+      <%= f.select :decider,
+            Proposal::DECIDERS.map { |d| [Proposal::DECIDER_LABELS[d], d] },
+            {}, class: "form-select #{'is-invalid' if proposal.errors[:decider].any?}" %>
+      <% if proposal.errors[:decider].any? %>
+        <div class="invalid-feedback"><%= proposal.errors[:decider].first %></div>
+      <% end %>
+    </div>
+
+    <div class="mb-4">
+      <%= f.label :deadline_or_cost, "Deadline or cost", class: "form-label" %>
+      <%= f.text_field :deadline_or_cost, maxlength: 200,
+            class: "form-control #{'is-invalid' if proposal.errors[:deadline_or_cost].any?}",
+            placeholder: "Optional, e.g. \"Before the spring meeting; about $1,200\"" %>
+      <% if proposal.errors[:deadline_or_cost].any? %>
+        <div class="invalid-feedback"><%= proposal.errors[:deadline_or_cost].first %></div>
+      <% end %>
+    </div>
+
+    <%= f.submit class: "btn btn-primary", data: { form_submit_target: "button" } %>
+  <% end %>
+</div>

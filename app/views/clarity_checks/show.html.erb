@@ -1,0 +1,112 @@
+<% check = @clarity_check %>
+<div data-controller="download-markdown"
+     data-download-markdown-content-value="<%= check.completed? ? check.to_markdown : '' %>"
+     data-download-markdown-filename-value="<%= check.markdown_filename %>"
+     style="max-width: 860px;">
+
+  <div class="d-flex justify-content-between align-items-start flex-wrap gap-3 mb-3">
+    <div>
+      <p class="text-muted small mb-1">Clarity check</p>
+      <h1 class="h3 mb-1"><%= @proposal.title %></h1>
+      <p class="text-muted small mb-0">
+        <%= link_to "← My proposals", proposals_path, class: "text-muted" %>
+        &nbsp;&middot;&nbsp;
+        <%= link_to "The draft", proposal_path(@proposal), class: "text-muted" %>
+        &nbsp;&middot;&nbsp;
+        Generated <%= check.generated_at ? "#{time_ago_in_words(check.generated_at)} ago" : "at an unknown time" %>
+      </p>
+    </div>
+    <div class="d-flex flex-wrap gap-2 align-items-start">
+      <%= link_to "Edit draft", edit_proposal_path(@proposal), class: "btn btn-outline-secondary btn-sm" %>
+      <%= render "proposals/check_button", proposal: @proposal, label: "Check again",
+                 button_class: "btn btn-outline-secondary btn-sm" %>
+      <% if check.completed? %>
+        <button class="btn btn-outline-primary btn-sm" type="button"
+                data-action="click->download-markdown#download">
+          Download .md
+        </button>
+      <% end %>
+      <button class="btn btn-outline-secondary btn-sm" type="button"
+              data-bs-toggle="collapse" data-bs-target="#raw-response"
+              aria-expanded="false" aria-controls="raw-response">
+        Show raw response
+      </button>
+    </div>
+  </div>
+
+  <p class="text-muted small mb-3">
+    <strong>AI-generated.</strong> A reader&rsquo;s first pass, not a ruling: it never judges whether the idea is
+    good, and it can be wrong. You decide what to change.
+  </p>
+
+  <% if check.stale? %>
+    <div class="alert alert-warning py-2 small">
+      Your draft has changed since this check. Check again to see the new version.
+    </div>
+  <% end %>
+
+  <% if check.failed? %>
+    <%= render "clarity_checks/parse_error", proposal: @proposal, check: check %>
+  <% elsif check.completed? %>
+    <div class="card mb-4">
+      <div class="card-body">
+        <div class="mb-2"><%= render "proposals/verdict_badges", check: check %></div>
+        <p class="lead mb-0"><%= check.verdict_line %></p>
+      </div>
+    </div>
+
+    <% if check.rewritten_motion.present? %>
+      <h2 class="h5 mb-2">Rewritten motion</h2>
+      <blockquote class="motion mb-4"><%= check.rewritten_motion %></blockquote>
+    <% end %>
+
+    <% if check.split_into.any? %>
+      <h2 class="h5 mb-2">Split into <%= check.split_into.size %> proposals</h2>
+      <p class="text-muted small">Each can be voted up or down on its own.</p>
+      <div class="row g-3 mb-4">
+        <% check.split_into.each_with_index do |part, i| %>
+          <div class="col-md-6">
+            <div class="card h-100">
+              <div class="card-body">
+                <h3 class="h6 mb-2"><%= i + 1 %>. <%= part["name"] %></h3>
+                <blockquote class="motion small mb-0"><%= part["motion"] %></blockquote>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+
+    <div class="row g-4 mb-4">
+      <div class="col-md-6">
+        <h2 class="h5 mb-2">A reader might still ask</h2>
+        <% if check.reader_questions.any? %>
+          <ul class="mb-0">
+            <% check.reader_questions.each do |question| %>
+              <li class="mb-1"><%= question %></li>
+            <% end %>
+          </ul>
+        <% else %>
+          <p class="text-muted mb-0">Nothing obvious. A reader has what they need to vote.</p>
+        <% end %>
+      </div>
+      <div class="col-md-6">
+        <h2 class="h5 mb-2">Suggested edits</h2>
+        <ol class="mb-0">
+          <% check.suggested_edits.each do |edit| %>
+            <li class="mb-1"><%= edit %></li>
+          <% end %>
+        </ol>
+      </div>
+    </div>
+  <% else %>
+    <p class="text-muted fst-italic">This check is still running&hellip;</p>
+  <% end %>
+
+  <div class="collapse mt-3" id="raw-response">
+    <div class="card card-body">
+      <p class="text-muted small mb-1">Raw response from Gemini:</p>
+      <pre class="small mb-0 text-muted"><%= check.gemini_raw %></pre>
+    </div>
+  </div>
+</div>

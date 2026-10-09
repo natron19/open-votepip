@@ -1,0 +1,90 @@
+<div class="text-center py-5">
+  <h1 class="display-5 fw-bold"><%= ENV.fetch("APP_NAME", "VotePIP Demo") %></h1>
+  <p class="lead text-muted mt-2"><%= ENV.fetch("APP_TAGLINE", "") %></p>
+  <p class="text-muted mx-auto mt-3" style="max-width: 620px;">
+    A proposal that bundles three things, or can&rsquo;t be answered yes or no, wastes a meeting. Write your
+    draft the way it comes to you. The clarity check tells you whether it is one proposal or several, whether
+    people can vote it up or down, what a reader would still ask, and two small edits, then hands you a clean
+    motion. It never says whether the idea is good, and it never names a person.
+  </p>
+  <div class="mt-4 d-flex justify-content-center gap-3">
+    <% if signed_in? %>
+      <%= link_to "Go to my proposals", proposals_path, class: "btn btn-primary btn-lg" %>
+    <% else %>
+      <%= link_to "Try it free", sign_up_path, class: "btn btn-primary btn-lg" %>
+      <%= link_to "Sign in", sign_in_path, class: "btn btn-outline-secondary btn-lg" %>
+    <% end %>
+  </div>
+</div>
+
+<hr class="my-5 opacity-25">
+
+<div class="mx-auto" style="max-width: 860px;">
+  <h2 class="h5 text-muted text-center mb-4">Example &mdash; a fictional housing co-op&rsquo;s draft</h2>
+
+  <div class="card mb-3">
+    <div class="card-body">
+      <p class="text-muted small mb-1">The draft</p>
+      <p class="mb-0 fst-italic">
+        &ldquo;The lobby is a mess. We should repaint the lobby before winter, stop people leaving bikes in the
+        ground-floor hallway, and move $3,000 from the reserve fund to pay for it.&rdquo;
+      </p>
+    </div>
+  </div>
+
+  <div class="card mb-3">
+    <div class="card-body">
+      <div class="mb-2">
+        <span class="badge verdict-badge text-bg-warning">2 proposals bundled</span>
+        <span class="badge verdict-badge text-bg-warning">Not yet votable</span>
+      </div>
+      <p class="lead mb-0">This is two proposals: repainting the lobby and a rule about bikes in the hallway. Each needs its own vote.</p>
+    </div>
+  </div>
+
+  <div class="row g-3 mb-3">
+    <div class="col-md-6">
+      <div class="card h-100"><div class="card-body">
+        <h3 class="h6 mb-2">1. Repaint the lobby</h3>
+        <blockquote class="motion small mb-0">That the co-op repaints the lobby before winter, paying up to $3,000 from the reserve fund.</blockquote>
+      </div></div>
+    </div>
+    <div class="col-md-6">
+      <div class="card h-100"><div class="card-body">
+        <h3 class="h6 mb-2">2. No bikes in the hallway</h3>
+        <blockquote class="motion small mb-0">That bikes may not be left in the ground-floor hallway.</blockquote>
+      </div></div>
+    </div>
+  </div>
+
+  <div class="row g-4 small">
+    <div class="col-md-6">
+      <h3 class="h6">A reader might still ask</h3>
+      <ul class="mb-0">
+        <li>Is the $3,000 for the paint alone, or for both changes?</li>
+        <li>Where would bikes be stored instead?</li>
+      </ul>
+    </div>
+    <div class="col-md-6">
+      <h3 class="h6">Suggested edits</h3>
+      <ol class="mb-0">
+        <li>Say which month &ldquo;before winter&rdquo; means.</li>
+        <li>Name the most the repainting may cost.</li>
+      </ol>
+    </div>
+  </div>
+
+  <p class="text-center text-muted small mt-4">
+    AI-generated. A reader&rsquo;s first pass, not a ruling: it never judges whether the idea is good.
+  </p>
+</div>
+
+<div class="text-center mt-5 pb-4">
+  <% unless signed_in? %>
+    <%= link_to "Check your own proposal &rarr;".html_safe, sign_up_path, class: "btn btn-primary" %>
+  <% end %>
+  <div class="mt-3 text-muted small">
+    Open source &middot;
+    <a href="https://votepip.com" class="text-muted">VotePIP</a>
+  </div>
+</div>

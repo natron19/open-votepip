@@ -1,0 +1,10 @@
+<div class="alert alert-warning">
+  <strong>The AI&rsquo;s answer could not be used.</strong>
+  <p class="mb-1"><%= check.failure_reason %>.</p>
+  <p class="mb-2 small">
+    The answer did not match the expected shape or broke one of this check&rsquo;s rules (it must never name a
+    person). Check again, or edit the template in the admin panel to tighten the instructions.
+  </p>
+  <%= render "proposals/check_button", proposal: proposal, label: "Retry",
+             button_class: "btn btn-outline-warning btn-sm" %>
+</div>

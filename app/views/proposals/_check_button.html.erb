@@ -1,0 +1,15 @@
+<%# The one button that runs votepip_motion_v1. The generating controller swaps it for a spinner while Gemini works. %>
+<div data-controller="generating"
+     data-action="turbo:submit-start->generating#start turbo:submit-end->generating#stop">
+  <div data-generating-target="form">
+    <%= button_to label, proposal_clarity_checks_path(proposal), method: :post, class: button_class %>
+  </div>
+  <div data-generating-target="overlay" class="d-none">
+    <div class="d-flex align-items-center gap-2">
+      <div class="spinner-border spinner-border-sm text-secondary" role="status">
+        <span class="visually-hidden">Checking…</span>
+      </div>
+      <span class="text-muted small">Reading your draft&hellip;</span>
+    </div>
+  </div>
+</div>

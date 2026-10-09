@@ -1,0 +1,41 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1 class="h3 mb-0">My proposals</h1>
+  <%= link_to "New proposal", new_proposal_path, class: "btn btn-primary btn-sm" %>
+</div>
+
+<% if @proposals.empty? %>
+  <div class="text-center py-5">
+    <p class="text-muted mb-3">You haven&rsquo;t written a proposal yet.</p>
+    <%= link_to "Write your first proposal", new_proposal_path, class: "btn btn-primary" %>
+  </div>
+<% else %>
+  <div class="row g-3">
+    <% @proposals.each do |proposal| %>
+      <% check = proposal.latest_clarity_check %>
+      <div class="col-12">
+        <%= link_to proposal_path(proposal), class: "text-decoration-none" do %>
+          <div class="card card-hover">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start gap-3">
+                <div>
+                  <h2 class="h5 card-title mb-1 text-body"><%= proposal.title %></h2>
+                  <p class="text-muted small mb-0"><%= proposal.decider_label %></p>
+                </div>
+                <div class="text-end small flex-shrink-0">
+                  <% if check&.completed? %>
+                    <div class="mb-1"><%= render "proposals/verdict_badges", check: check %></div>
+                    <div class="text-muted">checked <%= time_ago_in_words(check.generated_at) %> ago</div>
+                  <% elsif check&.failed? %>
+                    <div class="text-muted fst-italic">last check could not be read</div>
+                  <% else %>
+                    <div class="text-muted fst-italic">not checked yet</div>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+<% end %>

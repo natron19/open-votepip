@@ -1,0 +1,6 @@
+<span class="badge verdict-badge <%= check.single_proposal ? 'text-bg-dark' : 'text-bg-warning' %>">
+  <%= check.single_proposal ? "One proposal" : "#{check.split_into.size.positive? ? check.split_into.size : 'Several'} proposals bundled" %>
+</span>
+<span class="badge verdict-badge <%= check.votable ? 'text-bg-dark' : 'text-bg-warning' %>">
+  <%= check.votable ? "Votable as written" : "Not yet votable" %>
+</span>
