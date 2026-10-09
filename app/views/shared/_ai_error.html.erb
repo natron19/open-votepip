@@ -14,5 +14,5 @@
   <% else %>
     <p class="mb-2">An unexpected error occurred. Please try again.</p>
   <% end %>
-  <%= button_to "Try again", request.path, method: :get, class: "btn btn-outline-danger btn-sm" %>
+  <%= button_to "Try again", (request.referer.presence || root_path), method: :get, class: "btn btn-outline-danger btn-sm" %>
 </div>

@@ -54,7 +54,7 @@ module Evals
     def each_has_keys(c, ctx)
       items = Array(ctx.at(c["path"]))
       bad   = items.each_index.reject { |i| items[i].is_a?(Hash) && (Array(c["keys"]).map(&:to_s) - items[i].keys).empty? }
-      [items.any? && bad.empty?, items.empty? ? "no items at #{c['path']}" : "#{bad.size}/#{items.size} items missing keys"]
+      [!items.empty? && bad.empty?, items.empty? ? "no items at #{c['path']}" : "#{bad.size}/#{items.size} items missing keys"]
     end
 
     def count_between(c, ctx)
@@ -95,14 +95,14 @@ module Evals
       items    = Array(ctx.at(c["path"]))
       total    = items.sum { |i| i.is_a?(Hash) ? i[c.fetch("field")].to_s[/\d+(\.\d+)?/].to_f : 0 }
       expected = ctx.interpolate(c.fetch("value")).to_s[/\d+(\.\d+)?/].to_f
-      [items.any? && (total - expected).abs <= c.fetch("tolerance", 0), "sum #{total}, expected #{expected}"]
+      [!items.empty? && (total - expected).abs <= c.fetch("tolerance", 0), "sum #{total}, expected #{expected}"]
     end
 
     def values_in(c, ctx)
       items   = Array(ctx.at(c["path"]))
       allowed = Array(c["allowed"]).map { |v| v.to_s.downcase }
       bad     = items.map { |i| i.is_a?(Hash) ? i[c.fetch("field")] : i }.reject { |v| allowed.include?(v.to_s.downcase) }
-      [items.any? && bad.empty?, bad.empty? ? "all allowed" : "unexpected #{bad.uniq.join(', ')}"]
+      [!items.empty? && bad.empty?, bad.empty? ? "all allowed" : "unexpected #{bad.uniq.join(', ')}"]
     end
 
     def sorted_desc(c, ctx)
