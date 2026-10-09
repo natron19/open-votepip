@@ -48,20 +48,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_09_140001) do
     t.index ["status"], name: "index_clarity_checks_on_status"
   end
 
-  create_table "discovery_steps", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.boolean "completed", default: false, null: false
-    t.datetime "created_at", null: false
-    t.text "gemini_output"
-    t.text "gemini_raw"
-    t.uuid "product_id", null: false
-    t.string "step_name", null: false
-    t.integer "step_number", null: false
-    t.datetime "updated_at", null: false
-    t.text "user_input"
-    t.index ["product_id", "step_number"], name: "index_discovery_steps_on_product_id_and_step_number", unique: true
-    t.index ["product_id"], name: "index_discovery_steps_on_product_id"
-  end
-
   create_table "llm_requests", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "ai_template_id"
     t.decimal "cost_estimate_cents", precision: 10, scale: 4
@@ -91,17 +77,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_09_140001) do
     t.index ["user_id"], name: "index_password_resets_on_user_id"
   end
 
-  create_table "products", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.string "name", limit: 120, null: false
-    t.string "strategic_goal", limit: 300, null: false
-    t.string "target_customer", limit: 200, null: false
-    t.datetime "updated_at", null: false
-    t.uuid "user_id", null: false
-    t.index ["created_at"], name: "index_products_on_created_at"
-    t.index ["user_id"], name: "index_products_on_user_id"
-  end
-
   create_table "proposals", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.text "body", null: false
     t.datetime "created_at", null: false
@@ -124,38 +99,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_09_140001) do
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
-  create_table "workshop_agendas", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.text "body", null: false
-    t.datetime "created_at", null: false
-    t.text "gemini_raw"
-    t.string "title", null: false
-    t.datetime "updated_at", null: false
-    t.uuid "user_id", null: false
-    t.uuid "workshop_brief_id", null: false
-    t.index ["user_id"], name: "index_workshop_agendas_on_user_id"
-    t.index ["workshop_brief_id"], name: "index_workshop_agendas_on_workshop_brief_id", unique: true
-  end
-
-  create_table "workshop_briefs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "audience", null: false
-    t.datetime "created_at", null: false
-    t.text "desired_outcome", null: false
-    t.integer "duration_minutes", null: false
-    t.text "notes"
-    t.string "topic", null: false
-    t.datetime "updated_at", null: false
-    t.uuid "user_id", null: false
-    t.index ["user_id"], name: "index_workshop_briefs_on_user_id"
-  end
-
   add_foreign_key "clarity_checks", "proposals"
-  add_foreign_key "discovery_steps", "products"
   add_foreign_key "llm_requests", "ai_templates"
   add_foreign_key "llm_requests", "users"
   add_foreign_key "password_resets", "users"
-  add_foreign_key "products", "users"
   add_foreign_key "proposals", "users"
-  add_foreign_key "workshop_agendas", "users"
-  add_foreign_key "workshop_agendas", "workshop_briefs"
-  add_foreign_key "workshop_briefs", "users"
 end
