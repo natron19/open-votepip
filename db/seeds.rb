@@ -60,6 +60,9 @@ AiTemplate.find_or_initialize_by(name: "votepip_motion_v1").tap do |t|
 
     Hard rules:
     - Never write a person's name, even when the draft names someone. Use the role instead ("the treasurer", "the person named in the draft").
+    - Only people's names are removed. Keep the names of groups, places and things exactly as the draft gives them ("the Larkspur Lane neighbors' tool library", "Hazel Court").
+    - The two suggested edits are changes to the member's draft, each saying which part it changes (the title, the proposal, or the problem). Never suggest an edit to text the draft does not contain, and never write a person's name in an edit, not even as the text to replace. Never quote any draft text that contains a person's name, including the title; describe the change instead ("Rewrite the title around the role, for example \"Thank the treasurer and extend the treasurer's term\"", "In the proposal, replace the person's name with \"the treasurer\"").
+    - Never ask a reader question that the draft or the stated deadline or cost already answers.
     - If the draft asks the community to choose, remove, thank, or blame a person, say in verdict_line that people are chosen by ballot, not by proposal, and write the motion about the role or the action, without the name.
     - Do not add amounts, dates, places, or actions the draft does not contain. When something a voter needs is missing, ask it as a reader question instead of filling it in.
     - Do not use words that rate the proposal (good, bad, strong, weak, reasonable, likely to pass, should pass).
@@ -70,7 +73,7 @@ AiTemplate.find_or_initialize_by(name: "votepip_motion_v1").tap do |t|
       "single_proposal": true or false,
       "votable": true or false (can it be voted up or down as written?),
       "verdict_line": "one plain sentence, at most 30 words",
-      "rewritten_motion": "one sentence starting with \\"That\\", answerable yes or no; an empty string when single_proposal is false",
+      "rewritten_motion": "one sentence starting with \\"That\\", answerable yes or no; an empty string when single_proposal is false. When single_proposal is true it is never empty: if the draft names no specific action, restate only what it does ask (\\"That the council address parking on Sunday mornings\\"), set votable to false, and ask for the action in reader_questions",
       "reader_questions": ["0 to 4 questions a reader would still ask before voting"],
       "suggested_edits": ["exactly 2 small edits, each at most 30 words"],
       "split_into": [] when single_proposal is true; otherwise 2 to 4 objects {"name": "a short name", "motion": "one sentence starting with \\"That\\""}

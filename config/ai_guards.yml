@@ -8,6 +8,7 @@ crisis_terms: []
 # generic output checks only (non-empty, no prompt leak, no profanity, no new PII).
 #   format:        text | json
 #   required_keys: top-level keys the JSON object must contain
+#   thinking_budget: gemini-2.5 thinking tokens for this template (overrides AI_THINKING_BUDGET; 0 = off)
 templates:
   health_ping:
     format: text
